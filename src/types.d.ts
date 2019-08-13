@@ -6,7 +6,7 @@ export interface OnSubmitResponse {
 export interface UserActionInput {
   type: 'input'
   placeholder?: string
-  onSubmit: (userInput: string) => OnSubmitResponse
+  onSubmit: (userInput: string, data: object, setData: (property: string, value: any) => void) => OnSubmitResponse
 }
 
 export interface Button {
@@ -17,7 +17,7 @@ export interface Button {
 export interface UserActionButton {
   type: 'buttons'
   buttons: Button[]
-  onSubmit: (button: Button) => OnSubmitResponse
+  onSubmit: (button: Button, data: object, setData: (property: string, value: any) => void) => OnSubmitResponse
 }
 
 export type UserAction = UserActionInput

@@ -132,5 +132,7 @@ export const action = {
       runIn(next.botSays.length * 500)(() => store.dispatch({ type: 'SET_CURRENT', payload: next }))
       runIn((next.botSays.length * 500) + 100)(() => focusInput())
     }
-  }
+  },
+  setData: (property: string, value: any) =>
+    store.dispatch({ type: 'SET_DATA', payload: { property, value } }),
 }

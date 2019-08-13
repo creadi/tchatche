@@ -12,7 +12,8 @@ const config: BotConfig = {
       botSays: ['Hello', 'world', 'Your name?'],
       userAction: {
         type: 'input',
-        onSubmit: (name: string) => {
+        onSubmit: (name: string, data, setData) => {
+          setData('hello', 'world')
           if (name.length >= 2) {
             return { nextMessageId: 'second', data: { property: 'name', value: name } }
           }
@@ -25,7 +26,8 @@ const config: BotConfig = {
       botSays: ['Seriously, your name?'],
       userAction: {
         type: 'input',
-        onSubmit: (name: string) => {
+        onSubmit: (name: string, data) => {
+          console.log(data)
           if (name.length >= 2) {
             return { nextMessageId: 'second', data: { property: 'name', value: name } }
           }

@@ -1,6 +1,8 @@
 import { html } from 'lit-html'
-import { Button, UserAction, UserActionButton, UserActionInput } from '../types'
-import { action } from '../store'
+import { Button, UserAction, UserActionButton, UserActionInput, OnSubmitResponse } from '../types'
+import { action, store } from '../store'
+
+const getData = () => store.getState().data
 
 const isButtonAction = (action: UserAction): action is UserActionButton =>
   action.type === 'buttons'
@@ -8,10 +10,10 @@ const isButtonAction = (action: UserAction): action is UserActionButton =>
 const isInputAction = (action: UserAction): action is UserActionInput =>
   action.type === 'input'
 
-const onClick = (button: Button, onSubmit: Function) => () =>
-  action.userAnswered(onSubmit(button))
+const onClick = (button: Button, onSubmit: (button: Button, data: any, setData: (property: string, value: any) => void) => OnSubmitResponse) => () =>
+  action.userAnswered(onSubmit(button, getData(), action.setData))
 
-const button = (onSubmit: (button: Button) => void) =>
+const button = (onSubmit: (button: Button, data: any, setData: (property: string, value: any) => void) => OnSubmitResponse) =>
   (button: Button) =>
     html`
       <button
@@ -23,10 +25,10 @@ const button = (onSubmit: (button: Button) => void) =>
 const buttons = ({ buttons, onSubmit }: UserActionButton) =>
   buttons.map(button(onSubmit))
 
-const onKeyUp = (onSubmit: Function) =>
+const onKeyUp = (onSubmit: (userInput: string, data: any, setData: (property: string, value: any) => void) => OnSubmitResponse) =>
   (e: any) => {
     if (e.key === 'Enter') {
-      action.userAnswered(onSubmit(e.target.value))
+      action.userAnswered(onSubmit(e.target.value, getData(), action.setData))
       e.target.value = ''
     }
   }
