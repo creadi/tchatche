@@ -3,7 +3,12 @@ export interface OnSubmitData {
   data?: { property: string, value: string, label?: string }
 }
 
-export type OnSubmitResponse = Promise<OnSubmitData>
+export interface OnSubmitEnd {
+  data?: { property: string, value: string, label?: string }
+  isEnd: true
+}
+
+export type OnSubmitResponse = Promise<OnSubmitData | OnSubmitEnd>
 
 export interface UserActionInput {
   type: 'input'
@@ -39,4 +44,9 @@ export interface BotConfig {
 export interface Message {
   message: string
   isBot?: boolean
+}
+
+export interface Listener {
+  event: 'end' | 'render'
+  callback: (d: { conversation: Message[], data: object }) => void
 }

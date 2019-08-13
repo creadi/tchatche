@@ -1,11 +1,12 @@
 import { createStore } from 'redux'
-import { Message, BotMessage, UserAction } from './types'
+import { Message, BotMessage, OnSubmitData, OnSubmitEnd } from './types'
 
 interface State {
   conversation: Message[]
   config: BotMessage[]
   current?: BotMessage
   data: object
+  end?: boolean
 }
 
 const defaultState = {
@@ -49,13 +50,21 @@ interface SetCurrentAction {
 const isSetCurrentAction = (action: Action): action is SetCurrentAction =>
   action.type === actionType.SET_CURRENT
 
-type Action = SetDataAction | SetMessageAction | SetCurrentAction | SetConfigAction
+interface SetEndAction {
+  type: 'SET_END'
+}
+
+const isSetEndAction = (action: Action): action is SetEndAction =>
+  action.type === actionType.SET_END
+
+type Action = SetDataAction | SetMessageAction | SetCurrentAction | SetConfigAction | SetEndAction
 
 export const actionType = {
   SET_DATA: 'SET_DATA',
   SET_MSG: 'SET_MSG',
   SET_CURRENT: 'SET_CURRENT',
-  SET_CONFIG: 'SET_CONFIG'
+  SET_CONFIG: 'SET_CONFIG',
+  SET_END: 'SET_END',
 }
 
 const reducer = (state: State = defaultState, action: Action): State => {
@@ -83,6 +92,12 @@ const reducer = (state: State = defaultState, action: Action): State => {
       current: action.payload,
     }
   }
+  if (isSetEndAction(action)) {
+    return {
+      ...state,
+      end: true,
+    }
+  }
   return state
 }
 
@@ -108,6 +123,9 @@ const focusInput = () => {
   }
 }
 
+const isEnd = (submited: OnSubmitData | OnSubmitEnd): submited is OnSubmitEnd =>
+  Object.keys(submited).includes('isEnd')
+
 export const action = {
   init: (messages: BotMessage[]) => {
     store.dispatch({ type: 'SET_CONFIG', payload: messages })
@@ -120,18 +138,23 @@ export const action = {
       })
     }
   },
-  userAnswered: ({ nextMessageId, data }: { nextMessageId: string, data?: { property: string, value: string, label?: string }}) => {
-    store.dispatch({ type: 'SET_CURRENT', payload: undefined })
-    if (data) {
-      store.dispatch({ type: 'SET_DATA', payload: data })
-      addMessage({ message: data.label || data.value })
-    }
-    const next = store.getState().config.find(({ id }) => id === nextMessageId)
-    if (next) {
-      next.botSays.map((message, i) => runIn(500 * i)(() => addMessage({ message, isBot: true })))
-      runIn(next.botSays.length * 500)(() => store.dispatch({ type: 'SET_CURRENT', payload: next }))
-      runIn((next.botSays.length * 500) + 100)(() => focusInput())
-    }
+  userAnswered: (submited: OnSubmitData | OnSubmitEnd) => {
+      const { data } = submited
+      store.dispatch({ type: 'SET_CURRENT', payload: undefined })
+      if (data) {
+        store.dispatch({ type: 'SET_DATA', payload: data })
+        addMessage({ message: data.label || data.value })
+      }
+      if (isEnd(submited)) {
+        store.dispatch({ type: 'SET_END' })
+      } else {
+        const next = store.getState().config.find(({ id }) => id === submited.nextMessageId)
+        if (next) {
+          next.botSays.map((message, i) => runIn(500 * i)(() => addMessage({ message, isBot: true })))
+          runIn(next.botSays.length * 500)(() => store.dispatch({ type: 'SET_CURRENT', payload: next }))
+          runIn((next.botSays.length * 500) + 100)(() => focusInput())
+        }
+      }
   },
   setData: (property: string, value: any) =>
     store.dispatch({ type: 'SET_DATA', payload: { property, value } }),

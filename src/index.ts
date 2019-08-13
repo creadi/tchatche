@@ -2,7 +2,7 @@ import { html, render } from 'lit-html'
 import Message from './components/message'
 import UserAction from './components/userAction'
 import { action, store } from './store'
-import { BotConfig } from './types'
+import { BotConfig, Listener, Message as Msg } from './types'
 
 const config: BotConfig = {
   container: document.body,
@@ -45,18 +45,30 @@ const config: BotConfig = {
           { value: 'no', label: 'No' },
         ],
         onSubmit: ({ value, label }) => {
-          return Promise.resolve({ nextMessageId: 'first', data: { property: 'choice', value, label } })
+          return Promise.resolve({ isEnd: true, data: { property: 'choice', value, label } })
         }
       },
     }
   ]
 }
 
-
 const createBot = (config: BotConfig) => {
 
+  let listeners: Listener[] = []
+
   store.subscribe(() => {
-    const { conversation, current } = store.getState()
+    const { conversation, current, end, data } = store.getState()
+
+    listeners
+      .filter(({ event }) => event === 'render')
+      .forEach(({ callback }) => callback({ conversation, data }))
+
+    if (end) {
+      listeners
+        .filter(({ event }) => event === 'end')
+        .forEach(({ callback }) => callback({ conversation, data }))
+    }
+
     const App = html`
       ${Message(conversation)}
       ${ current ? UserAction(current.userAction) : null }
@@ -67,22 +79,17 @@ const createBot = (config: BotConfig) => {
   action.init(config.messages)
 
   return {
-    getData: () => store.getState().data
+    getData: () => store.getState().data,
+    on: (event: 'end' | 'render', callback: (d: { conversation: Msg[], data: object }) => void) => {
+      listeners.push({ event, callback })
+    }
   }
 }
 
 const bot = createBot(config)
 
-setTimeout(() => console.log(bot.getData()), 10000)
-/*
-store.subscribe(() => {
-  const { conversation, current } = store.getState()
-  const App = html`
-    ${Message(conversation)}
-    ${ current ? UserAction(current.userAction) : null }
-  `
-  render(App, config.container)
+bot.on('end', ({ conversation, data }) => {
+  console.log('done', { conversation, data })
 })
 
-window.addEventListener('load', () => action.init(config.messages))
-*/
+bot.on('render', console.log)
