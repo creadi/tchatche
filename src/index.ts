@@ -15,9 +15,9 @@ const config: BotConfig = {
         onSubmit: (name: string, data, setData) => {
           setData('hello', 'world')
           if (name.length >= 2) {
-            return { nextMessageId: 'second', data: { property: 'name', value: name } }
+            return Promise.resolve({ nextMessageId: 'second', data: { property: 'name', value: name } })
           }
-          return { nextMessageId: 'first-validation-error', data: { property: 'name', value: name } }
+          return Promise.resolve({ nextMessageId: 'first-validation-error', data: { property: 'name', value: name } })
         }
       },
     },
@@ -29,9 +29,9 @@ const config: BotConfig = {
         onSubmit: (name: string, data) => {
           console.log(data)
           if (name.length >= 2) {
-            return { nextMessageId: 'second', data: { property: 'name', value: name } }
+            return Promise.resolve({ nextMessageId: 'second', data: { property: 'name', value: name } })
           }
-          return { nextMessageId: 'first-validation-error', data: { property: 'name', value: name } }
+          return Promise.resolve({ nextMessageId: 'first-validation-error', data: { property: 'name', value: name } })
         }
       },
     },
@@ -45,7 +45,7 @@ const config: BotConfig = {
           { value: 'no', label: 'No' },
         ],
         onSubmit: ({ value, label }) => {
-          return { nextMessageId: 'first', data: { property: 'choice', value, label } }
+          return Promise.resolve({ nextMessageId: 'first', data: { property: 'choice', value, label } })
         }
       },
     }

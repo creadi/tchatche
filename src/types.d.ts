@@ -1,7 +1,9 @@
-export interface OnSubmitResponse {
+export interface OnSubmitData {
   nextMessageId: string
   data?: { property: string, value: string, label?: string }
 }
+
+export type OnSubmitResponse = Promise<OnSubmitData>
 
 export interface UserActionInput {
   type: 'input'

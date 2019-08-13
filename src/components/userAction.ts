@@ -11,7 +11,8 @@ const isInputAction = (action: UserAction): action is UserActionInput =>
   action.type === 'input'
 
 const onClick = (button: Button, onSubmit: (button: Button, data: any, setData: (property: string, value: any) => void) => OnSubmitResponse) => () =>
-  action.userAnswered(onSubmit(button, getData(), action.setData))
+  onSubmit(button, getData(), action.setData)
+    .then(action.userAnswered)
 
 const button = (onSubmit: (button: Button, data: any, setData: (property: string, value: any) => void) => OnSubmitResponse) =>
   (button: Button) =>
@@ -28,8 +29,11 @@ const buttons = ({ buttons, onSubmit }: UserActionButton) =>
 const onKeyUp = (onSubmit: (userInput: string, data: any, setData: (property: string, value: any) => void) => OnSubmitResponse) =>
   (e: any) => {
     if (e.key === 'Enter') {
-      action.userAnswered(onSubmit(e.target.value, getData(), action.setData))
-      e.target.value = ''
+      onSubmit(e.target.value, getData(), action.setData)
+        .then(submited => {
+          action.userAnswered(submited)
+          e.target.value = ''
+        })
     }
   }
 
