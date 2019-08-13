@@ -79,7 +79,6 @@ const createBot = (config: BotConfig) => {
   action.init(config.messages)
 
   return {
-    getData: () => store.getState().data,
     on: (event: 'end' | 'render', callback: (d: { conversation: Msg[], data: object }) => void) => {
       listeners.push({ event, callback })
     }
