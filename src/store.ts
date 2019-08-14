@@ -73,7 +73,6 @@ export const actionType = {
 }
 
 const reducer = (state: State = defaultState, action: Action): State => {
-  console.log(state)
   if (isSetConfigAction(action)) {
     return {
       ...state,
@@ -135,7 +134,6 @@ const isEnd = (submited: OnSubmitData | OnSubmitEnd): submited is OnSubmitEnd =>
 
 export const action = {
   init: (messages: BotMessage[], pace: number = 500) => {
-    console.log({ pace })
     store.dispatch({ type: 'SET_CONFIG', payload: { messages, pace } })
     const first = messages[0]
     if (first) {

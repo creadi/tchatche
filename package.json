@@ -8,7 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "tsc"
   },
-  "keywords": ["chat", "bot", "conversation"],
+  "keywords": [
+    "chat",
+    "bot",
+    "conversation"
+  ],
   "author": "idris-maps",
   "license": "GPL-2.0",
   "devDependencies": {
