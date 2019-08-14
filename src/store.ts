@@ -7,12 +7,14 @@ interface State {
   current?: BotMessage
   data: object
   end?: boolean
+  pace: number
 }
 
 const defaultState = {
   conversation: [],
   config: [],
   data: {},
+  pace: 500,
 }
 
 interface SetDataAction {
@@ -25,7 +27,10 @@ interface SetDataAction {
 
 interface SetConfigAction {
   type: 'SET_CONFIG'
-  payload: BotMessage[]
+  payload: {
+    messages: BotMessage[]
+    pace: number
+  }
 }
 
 const isSetConfigAction = (action: Action): action is SetConfigAction =>
@@ -68,10 +73,12 @@ export const actionType = {
 }
 
 const reducer = (state: State = defaultState, action: Action): State => {
+  console.log(state)
   if (isSetConfigAction(action)) {
     return {
       ...state,
-      config: action.payload,
+      config: action.payload.messages,
+      pace: action.payload.pace,
     }
   }
   if (isSetDataAction(action)) {
@@ -127,12 +134,13 @@ const isEnd = (submited: OnSubmitData | OnSubmitEnd): submited is OnSubmitEnd =>
   Object.keys(submited).includes('isEnd')
 
 export const action = {
-  init: (messages: BotMessage[]) => {
-    store.dispatch({ type: 'SET_CONFIG', payload: messages })
+  init: (messages: BotMessage[], pace: number = 500) => {
+    console.log({ pace })
+    store.dispatch({ type: 'SET_CONFIG', payload: { messages, pace } })
     const first = messages[0]
     if (first) {
-      first.botSays.map((message, i) => runIn(500 * i)(() => addMessage({ message, isBot: true })))
-      runIn(first.botSays.length * 500)(() => {
+      first.botSays.map((message, i) => runIn(pace * (i + 1))(() => addMessage({ message, isBot: true })))
+      runIn((first.botSays.length) * pace)(() => {
         store.dispatch({ type: 'SET_CURRENT', payload: first })
         focusInput()
       })
@@ -150,9 +158,12 @@ export const action = {
       } else {
         const next = store.getState().config.find(({ id }) => id === submited.nextMessageId)
         if (next) {
-          next.botSays.map((message, i) => runIn(500 * i)(() => addMessage({ message, isBot: true })))
-          runIn(next.botSays.length * 500)(() => store.dispatch({ type: 'SET_CURRENT', payload: next }))
-          runIn((next.botSays.length * 500) + 100)(() => focusInput())
+          const { pace } = store.getState()
+          next.botSays.map((message, i) => runIn(pace * (i + 1))(() => addMessage({ message, isBot: true })))
+          runIn((next.botSays.length) * pace)(() => {
+            store.dispatch({ type: 'SET_CURRENT', payload: next })
+            focusInput()
+          })
         }
       }
   },

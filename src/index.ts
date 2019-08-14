@@ -76,7 +76,7 @@ const createBot = (config: BotConfig) => {
     render(App, config.container)
   })
 
-  action.init(config.messages)
+  action.init(config.messages, config.pace)
 
   return {
     on: (event: 'end' | 'render', callback: (d: { conversation: Msg[], data: object }) => void) => {

@@ -1,10 +1,10 @@
 export interface OnSubmitData {
   nextMessageId: string
-  data?: { property: string, value: string, label?: string }
+  data: { property: string, value: string, label?: string }
 }
 
 export interface OnSubmitEnd {
-  data?: { property: string, value: string, label?: string }
+  data: { property: string, value: string, label?: string }
   isEnd: true
 }
 
@@ -39,6 +39,7 @@ export interface BotMessage {
 export interface BotConfig {
   container: HTMLElement
   messages: BotMessage[]
+  pace?: number
 }
 
 export interface Message {
@@ -48,5 +49,5 @@ export interface Message {
 
 export interface Listener {
   event: 'end' | 'render'
-  callback: (d: { conversation: Message[], data: object }) => void
+  callback: (onEndData: { conversation: Message[], data: object }) => void
 }
