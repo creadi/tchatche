@@ -48,6 +48,6 @@ export interface Message {
 }
 
 export interface Listener {
-  event: 'end' | 'render'
+  event: 'end'
   callback: (onEndData: { conversation: Message[], data: object }) => void
 }
