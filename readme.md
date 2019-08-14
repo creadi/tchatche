@@ -2,6 +2,8 @@
 
 For chat-like conversation UI
 
+[demo](https://tchatche-example.surge.sh)
+
 ## Usage
 
 ```typescript
