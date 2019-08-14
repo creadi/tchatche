@@ -1,15 +1,16 @@
 {
-  "name": "chatbot",
+  "name": "tchatche",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Conversation bot framework",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack --watch --mode=development"
+    "prepublish": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["chat", "bot", "conversation"],
+  "author": "idris-maps",
+  "license": "GPL-2.0",
   "devDependencies": {
     "typescript": "^3.5.3"
   },
