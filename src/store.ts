@@ -115,7 +115,7 @@ const runIn = (time: number) => (func: Function) =>
 const addMessage = (msg: { message: string, isBot?: boolean }) => {
   store.dispatch({ type: 'SET_MSG', payload: msg })
   runIn(100)(() => {
-    const messages = document.querySelectorAll('#tchatche-messages > div.message')
+    const messages = document.querySelectorAll('#tchatche-messages > div.message-container')
     const latestMessage = messages[messages.length - 1]
     latestMessage.scrollIntoView({ behavior: 'smooth' })
   })
