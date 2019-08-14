@@ -115,7 +115,7 @@ const runIn = (time: number) => (func: Function) =>
 const addMessage = (msg: { message: string, isBot?: boolean }) => {
   store.dispatch({ type: 'SET_MSG', payload: msg })
   runIn(100)(() => {
-    const messages = document.getElementsByClassName('message') // TODO not whole document
+    const messages = document.querySelectorAll('#tchatche-messages > div.message')
     const latestMessage = messages[messages.length - 1]
     latestMessage.scrollIntoView({ behavior: 'smooth' })
   })
@@ -123,7 +123,7 @@ const addMessage = (msg: { message: string, isBot?: boolean }) => {
 
 const focusInput = () => {
   // @ts-ignore
-  const input: HTMLInputElement = document.getElementsByClassName('user-action-input')[0]
+  const input: HTMLInputElement | null = document.querySelector('#tchatche-user-action > input')
   if (input) {
     runIn(100)(() => input.focus())
   }
