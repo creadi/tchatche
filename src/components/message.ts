@@ -9,4 +9,8 @@ const message = ({ message, isBot }: Message) =>
   `
 
 export default (messages: Message[]) =>
-  messages.map(message)
+  html`
+    <div id="tchatche-messages">
+      ${messages.map(message)}
+    </div>
+  `
