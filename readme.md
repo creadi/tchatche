@@ -21,6 +21,72 @@ bot.on('end', ({ conversation, data }) => {
 })
 ```
 
+## Example
+
+This is a simple example chat. The bot asks the user for her name (id: `name`). The conversation always starts with the first message. When the user puts in her name, we validate the input. In this case, we are just checking if the string is at least 2 characters long. If it is, we go over to a question where the user answers by clicking one of two buttons (id: `one-or-two`). If the name is not valid we go to `name-validation-error` where the user is asked to enter her name again. The conversation ends when `one-or-two` has been answered. The `.on('end')` callback is triggered. It returns the whole conversation and the data collected. In this case the data will look somthing like: `{ name: 'Xxxx', choice: 'two' }`.
+
+```typescript
+import createBot from 'tchatche'
+import { BotConfig } from 'tchatche/dist/types'
+
+const config: BotConfig = {
+  container: document.body,
+  messages: [
+    {
+      id: 'name',
+      botSays: () => ([
+        'Hello',
+        'What is your name?'
+      ]),
+      userAction: {
+        type: 'input',
+        onSubmit: async (name: string) =>
+          name.length >= 2
+            ? { nextMessageId: 'one-or-two', data: { property: 'name', value: name } }
+            : { nextMessageId: 'name-validation-error', data: { property: 'name', value: name } }
+      },
+    },
+    {
+      id: 'name-validation-error',
+      botSays: () => ([
+        'That is not your name',
+        'Seriously...',
+        'What is your name?',
+      ]),
+      userAction: {
+        type: 'input',
+        onSubmit: async (name: string) =>
+          name.length >= 2
+            ? { nextMessageId: 'one-or-two', data: { property: 'name', value: name } }
+            : { nextMessageId: 'name-validation-error', data: { property: 'name', value: name } }
+      },
+    },
+    {
+      id: 'one-or-two',
+      botSays: (data: any) => ([
+        `Thanks, ${data.name}`,
+        'Choose one or two',
+      ]),
+      userAction: {
+        type: 'buttons',
+        buttons: [
+          { value: 'one', label: 'One' },
+          { value: 'two', label: 'Two' },
+        ],
+        onSubmit: async ({ value, label }) =>
+          ({ isEnd: true, data: { property: 'choice', value, label } })
+      },
+    }
+  ]
+}
+
+const bot = createBot(config)
+
+bot.on('end', ({ conversation, data }) => {
+  console.log('done', { conversation, data })
+})
+```
+
 ### `config` object
 
 ```typescript
@@ -40,13 +106,13 @@ export interface BotConfig {
 ```typescript
 export interface BotMessage {
   id: string
-  botSays: string[]
+  botSays: (data: any) => string[]
   userAction: UserAction
 }
 ```
 
 * `id` is used as a reference to get to that particular message in the flow. Must be unique.
-* `botSays` is an array of strings representing what the bot says.
+* `botSays` is a function that takes `data` as an argument and returns an array of strings. `data` contains the values previously collected.
 * `userAction` describes what the user can do after the bot has talked.
 
 ### `userAction`
@@ -103,69 +169,3 @@ export type OnSubmitResponse = Promise<OnSubmitData | OnSubmitEnd>
 ```
 
 It either redirects to another message or ends the conversation. In both cases it has to return the data collected from the user.
-
-## Example
-
-
-
-```typescript
-import createBot from 'tchatche'
-import { BotConfig } from 'tchatche/dist/types'
-
-const config: BotConfig = {
-  container: document.body,
-  messages: [
-    {
-      id: 'first',
-      botSays: [
-        'Hello',
-        'What is your name?'
-      ],
-      userAction: {
-        type: 'input',
-        onSubmit: async (name: string) =>
-          name.length >= 2
-            ? { nextMessageId: 'second', data: { property: 'name', value: name } }
-            : { nextMessageId: 'first-validation-error', data: { property: 'name', value: name } }
-      },
-    },
-    {
-      id: 'first-validation-error',
-      botSays: [
-        'That is not your name',
-        'Seriously...',
-        'What is your name?',
-      ],
-      userAction: {
-        type: 'input',
-        onSubmit: async (name: string) =>
-          name.length >= 2
-            ? { nextMessageId: 'second', data: { property: 'name', value: name } }
-            : { nextMessageId: 'first-validation-error', data: { property: 'name', value: name } }
-      },
-    },
-    {
-      id: 'second',
-      botSays: [
-        'Thanks',
-        'Choose one or two',
-      ],
-      userAction: {
-        type: 'buttons',
-        buttons: [
-          { value: 'one', label: 'One' },
-          { value: 'two', label: 'Two' },
-        ],
-        onSubmit: async ({ value, label }) =>
-          ({ isEnd: true, data: { property: 'choice', value, label } })
-      },
-    }
-  ]
-}
-
-const bot = createBot(config)
-
-bot.on('end', ({ conversation, data }) => {
-  console.log('done', { conversation, data })
-})
-```
