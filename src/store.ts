@@ -133,8 +133,8 @@ const focusInput = () => {
 const isEnd = (submited: OnSubmitData | OnSubmitEnd): submited is OnSubmitEnd =>
   Object.keys(submited).includes('isEnd')
 
-const runMessage = (msg: BotMessage, pace: number) => {
-  msg.botSays.map((message, i) => runIn(pace * (i + 1))(() => addMessage({ message, isBot: true })))
+const runMessage = (msg: BotMessage, pace: number, data: any) => {
+  msg.botSays(data).map((message, i) => runIn(pace * (i + 1))(() => addMessage({ message, isBot: true })))
   runIn((msg.botSays.length) * pace)(() => {
     store.dispatch({ type: 'SET_CURRENT', payload: msg })
     focusInput()
@@ -146,7 +146,7 @@ export const action = {
     store.dispatch({ type: 'SET_CONFIG', payload: { messages, pace } })
     const first = messages[0]
     if (first) {
-      runMessage(first, pace)
+      runMessage(first, pace, store.getState().data)
     }
   },
   userAnswered: (submited: OnSubmitData | OnSubmitEnd) => {
@@ -159,10 +159,11 @@ export const action = {
       if (isEnd(submited)) {
         store.dispatch({ type: 'SET_END' })
       } else {
-        const next = store.getState().config.find(({ id }) => id === submited.nextMessageId)
+        const { config, data } = store.getState()
+        const next = config.find(({ id }) => id === submited.nextMessageId)
         if (next) {
           const { pace } = store.getState()
-          runMessage(next, pace)
+          runMessage(next, pace, data)
         }
       }
   },

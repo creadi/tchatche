@@ -32,7 +32,7 @@ export type UserAction = UserActionInput
 
 export interface BotMessage {
   id: string
-  botSays: string[]
+  botSays: (data: any) => string[]
   userAction: UserAction
 }
 
