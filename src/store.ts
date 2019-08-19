@@ -134,8 +134,9 @@ const isEnd = (submited: OnSubmitData | OnSubmitEnd): submited is OnSubmitEnd =>
   Object.keys(submited).includes('isEnd')
 
 const runMessage = (msg: BotMessage, pace: number, data: any) => {
-  msg.botSays(data).map((message, i) => runIn(pace * (i + 1))(() => addMessage({ message, isBot: true })))
-  runIn((msg.botSays.length) * pace)(() => {
+  const says = msg.botSays(data)
+  says.map((message, i) => runIn(pace * (i + 1))(() => addMessage({ message, isBot: true })))
+  runIn((says.length) * pace)(() => {
     store.dispatch({ type: 'SET_CURRENT', payload: msg })
     focusInput()
   })
