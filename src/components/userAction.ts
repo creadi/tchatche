@@ -20,6 +20,7 @@ const button = (onSubmit: (button: Button, data: any, setData: (property: string
       <button
         class="user-action user-action-button"
         @click=${ onClick(button, onSubmit) }
+        type="button"
         >${button.label}</button>
     `
 
