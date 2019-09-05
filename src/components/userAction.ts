@@ -38,11 +38,12 @@ const onKeyUp = (onSubmit: (userInput: string, data: any, setData: (property: st
     }
   }
 
-const input = ({ placeholder, onSubmit }: UserActionInput) =>
+const input = ({ placeholder, onSubmit, type }: UserActionInput) =>
   html`
     <input
       class="user-action user-action-input"
       placeholder=${ placeholder || ''}
+      type=${ type || 'text'}
       @keyup=${ onKeyUp(onSubmit) }
       />
   `

@@ -13,6 +13,7 @@ export type OnSubmitResponse = Promise<OnSubmitData | OnSubmitEnd>
 export interface UserActionInput {
   inputType: 'input'
   placeholder?: string
+  type?: string
   onSubmit: (userInput: string, data: object, setData: (property: string, value: any) => void) => OnSubmitResponse
 }
 
