@@ -117,7 +117,7 @@ const addMessage = (msg: { message: string, isBot?: boolean }) => {
   runIn(100)(() => {
     const end = document.querySelector('#tchatche-messages > div.after-messages')
     if (end) {
-      end.scrollIntoView({ behavior: 'smooth' })
+      end.scrollIntoView({ behavior: 'smooth', block: 'end' })
     }
   })
 }
