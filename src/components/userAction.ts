@@ -5,10 +5,10 @@ import { action, store } from '../store'
 const getData = () => store.getState().data
 
 const isButtonAction = (action: UserAction): action is UserActionButton =>
-  action.type === 'buttons'
+  action.inputType === 'buttons'
 
 const isInputAction = (action: UserAction): action is UserActionInput =>
-  action.type === 'input'
+  action.inputType === 'input'
 
 const onClick = (button: Button, onSubmit: (button: Button, data: any, setData: (property: string, value: any) => void) => OnSubmitResponse) => () =>
   onSubmit(button, getData(), action.setData)
