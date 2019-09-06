@@ -19,7 +19,7 @@ export interface UserActionInput {
 
 export interface Button {
   label: string
-  value: string
+  value: string | number
 }
 
 export interface UserActionButton {
