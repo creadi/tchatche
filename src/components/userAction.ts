@@ -60,8 +60,4 @@ const inputType = (action: UserAction) => {
 
 
 export default (action: UserAction) =>
-  html`
-    <div id="tchatche-user-action">
-      ${ inputType(action) }
-    </div>
-  `
+  html`${ inputType(action) }`

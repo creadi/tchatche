@@ -20,7 +20,9 @@ const createBot = (config: BotConfig) => {
     const App = html`
       <div id="tchatche-container">
         ${Message(conversation)}
-        ${ current ? UserAction(current.userAction) : null }
+        <div id="tchatche-user-action">
+          ${ current ? UserAction(current.userAction) : null }
+        </div>
       </div>
     `
     render(App, config.container)

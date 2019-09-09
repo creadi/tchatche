@@ -51,6 +51,6 @@ var inputType = function (action) {
     return null;
 };
 exports.default = (function (action) {
-    return lit_html_1.html(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n    <div id=\"tchatche-user-action\">\n      ", "\n    </div>\n  "], ["\n    <div id=\"tchatche-user-action\">\n      ", "\n    </div>\n  "])), inputType(action));
+    return lit_html_1.html(templateObject_3 || (templateObject_3 = __makeTemplateObject(["", ""], ["", ""])), inputType(action));
 });
 var templateObject_1, templateObject_2, templateObject_3;

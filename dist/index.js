@@ -26,7 +26,7 @@ var createBot = function (config) {
                 return callback({ conversation: conversation, data: data });
             });
         }
-        var App = lit_html_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <div id=\"tchatche-container\">\n        ", "\n        ", "\n      </div>\n    "], ["\n      <div id=\"tchatche-container\">\n        ", "\n        ", "\n      </div>\n    "])), message_1.default(conversation), current ? userAction_1.default(current.userAction) : null);
+        var App = lit_html_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <div id=\"tchatche-container\">\n        ", "\n        <div id=\"tchatche-user-action\">\n          ", "\n        </div>\n      </div>\n    "], ["\n      <div id=\"tchatche-container\">\n        ", "\n        <div id=\"tchatche-user-action\">\n          ", "\n        </div>\n      </div>\n    "])), message_1.default(conversation), current ? userAction_1.default(current.userAction) : null);
         lit_html_1.render(App, config.container);
     });
     store_1.action.init(config.messages, config.pace);
