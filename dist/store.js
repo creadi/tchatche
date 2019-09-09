@@ -74,9 +74,9 @@ var runIn = function (time) { return function (func) {
 var addMessage = function (msg) {
     exports.store.dispatch({ type: 'SET_MSG', payload: msg });
     runIn(100)(function () {
-        var end = document.querySelector('#tchatche-messages > div.after-messages');
-        if (end) {
-            end.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        var container = document.querySelector('#tchatche-messages');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
         }
     });
 };
