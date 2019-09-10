@@ -39,7 +39,7 @@ const config: BotConfig = {
         'What is your name?'
       ]),
       userAction: {
-        type: 'input',
+        inputType: 'input',
         onSubmit: async (name: string) =>
           name.length >= 2
             ? { nextMessageId: 'one-or-two', data: { property: 'name', value: name } }
@@ -54,7 +54,7 @@ const config: BotConfig = {
         'What is your name?',
       ]),
       userAction: {
-        type: 'input',
+        inputType: 'input',
         onSubmit: async (name: string) =>
           name.length >= 2
             ? { nextMessageId: 'one-or-two', data: { property: 'name', value: name } }
@@ -68,7 +68,7 @@ const config: BotConfig = {
         'Choose one or two',
       ]),
       userAction: {
-        type: 'buttons',
+        inputType: 'buttons',
         buttons: [
           { value: 'one', label: 'One' },
           { value: 'two', label: 'Two' },

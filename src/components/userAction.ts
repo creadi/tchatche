@@ -5,10 +5,10 @@ import { action, store } from '../store'
 const getData = () => store.getState().data
 
 const isButtonAction = (action: UserAction): action is UserActionButton =>
-  action.type === 'buttons'
+  action.inputType === 'buttons'
 
 const isInputAction = (action: UserAction): action is UserActionInput =>
-  action.type === 'input'
+  action.inputType === 'input'
 
 const onClick = (button: Button, onSubmit: (button: Button, data: any, setData: (property: string, value: any) => void) => OnSubmitResponse) => () =>
   onSubmit(button, getData(), action.setData)
@@ -20,6 +20,7 @@ const button = (onSubmit: (button: Button, data: any, setData: (property: string
       <button
         class="user-action user-action-button"
         @click=${ onClick(button, onSubmit) }
+        type="button"
         >${button.label}</button>
     `
 
@@ -37,11 +38,12 @@ const onKeyUp = (onSubmit: (userInput: string, data: any, setData: (property: st
     }
   }
 
-const input = ({ placeholder, onSubmit }: UserActionInput) =>
+const input = ({ placeholder, onSubmit, type }: UserActionInput) =>
   html`
     <input
       class="user-action user-action-input"
       placeholder=${ placeholder || ''}
+      type=${ type || 'text'}
       @keyup=${ onKeyUp(onSubmit) }
       />
   `
@@ -58,8 +60,4 @@ const inputType = (action: UserAction) => {
 
 
 export default (action: UserAction) =>
-  html`
-    <div id="tchatche-user-action">
-      ${ inputType(action) }
-    </div>
-  `
+  html`${ inputType(action) }`

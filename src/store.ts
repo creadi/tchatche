@@ -115,9 +115,9 @@ const runIn = (time: number) => (func: Function) =>
 const addMessage = (msg: { message: string, isBot?: boolean }) => {
   store.dispatch({ type: 'SET_MSG', payload: msg })
   runIn(100)(() => {
-    const end = document.querySelector('#tchatche-messages > div.after-messages')
-    if (end) {
-      end.scrollIntoView({ behavior: 'smooth' })
+    const container = document.querySelector('#tchatche-messages')
+    if (container) {
+      container.scrollTop = container.scrollHeight
     }
   })
 }
