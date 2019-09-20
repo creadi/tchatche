@@ -119,7 +119,7 @@ export interface BotMessage {
 
 ```typescript
 export interface UserActionInput {
-  type: 'input'
+  inputType: 'input'
   placeholder?: string
   onSubmit: (userInput: string, data: object, setData: (property: string, value: any) => void) => OnSubmitResponse
 }
@@ -130,7 +130,7 @@ export interface Button {
 }
 
 export interface UserActionButton {
-  type: 'buttons'
+  inputType: 'buttons'
   buttons: Button[]
   onSubmit: (button: Button, data: object, setData: (property: string, value: any) => void) => OnSubmitResponse
 }
